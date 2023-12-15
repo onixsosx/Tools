@@ -1,13 +1,13 @@
 #!/bin/bash
 
 clear
-#Check if it's iPC
-if [[ `./bdmesg|grep -Ewi "Clover|OpenCore"` ]]; then # if Clover or OpenCore exist
-	echo "FAIL: This is not a Macintosh."
+#Check if it's Apple
+if [ -d /usr/local/bin/Bootloader ]; then # if Bootloader folder exist
+	echo "FAIL: This is not an Apple."
 	echo
 	exit 1
 fi
-#Done Check if it's iPC
+#Done Check if it's Apple
 
 if [[ ! `echo $PATH|grep "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"` ]]; then # if Not Found
 	export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
