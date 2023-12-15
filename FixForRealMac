@@ -1,6 +1,14 @@
 #!/bin/bash
 
 clear
+#Check if it's iPC
+if [[ `./bdmesg|grep -Ewi "Clover|OpenCore"` ]]; then # if Clover or OpenCore exist
+	echo "FAIL: This is not a Macintosh."
+	echo
+	exit 1
+fi
+#Done Check if it's iPC
+
 if [[ ! `echo $PATH|grep "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"` ]]; then # if Not Found
 	export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 fi
