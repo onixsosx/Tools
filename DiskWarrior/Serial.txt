@@ -1,0 +1,7 @@
+# Serial or Any
+RGKJ-2TCB-BNRV
+
+# Block DiskWarrior
+127.0.0.1	www.alsoft.com
+127.0.0.1	updates.alsoft.com
+ 
