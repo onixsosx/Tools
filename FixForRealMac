@@ -71,11 +71,13 @@ fi
 #Done Admin Rights
 
 #Disabling Gatekeeper
-if [ $(ver "$macOS_BUILD") -ge $(ver 10.7) ]; then # Lion & above
+if [ $(ver "$macOS_BUILD") -le $(ver 10.15) ]; then # Catalina & below
 	spctl --master-disable
-	if [ $(ver "$macOS_BUILD") -ge $(ver 10.10) ]; then # Yose & above
-		defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
-	fi
+else
+	spctl --global-disable
+fi
+if [ $(ver "$macOS_BUILD") -ge $(ver 10.10) ]; then # Yose & above
+	defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
 fi
 #Done Disabling Gatekeeper
 
@@ -83,9 +85,10 @@ fi
 defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
 #Done Hide OTHER account from the Login Window
 
-#rm -Rf $TMPDIR../C/com.apple.appstore
-rm -Rf /.Trashes/*
-rm -Rf "$HOME"/.Trash/*
+rm -Rf /.Trashes/* &>/dev/null
+rm -Rf "$HOME"/.Trash/* &>/dev/null
+rm -Rf "$HOME"/Trash/* &>/dev/null
+rm -Rf /Library/Logs/DiagnosticReports/* &>/dev/null
 if [ $(ver "$macOS_BUILD") -eq $(ver 10.6) ]; then # SL
 	dscacheutil -flushcache &>/dev/null
 else
