@@ -31,7 +31,7 @@ get_drive_name() {
 }
 
 # Display header
-echo -e "${CYAN}Bypass MDM By iPC)${NC}"
+echo -e "${CYAN}Bypass MDM By iPC${NC}"
 echo ""
 
 # Get drive name
