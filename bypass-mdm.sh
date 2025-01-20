@@ -40,28 +40,26 @@ DATA_VOLUME="${DRIVE_NAME} - Data"
 
 # Prompt user for choice
 PS3='Please enter your choice: '
-options=("Bypass MDM from Recovery" "Reboot & Exit")
+options=("Bypass MDM from Recovery" "Exit & Reboot")
 select opt in "${options[@]}"; do
 	case $opt in
 		"Bypass MDM from Recovery")
 			# Bypass MDM from Recovery
 			echo -e "${YEL}Bypass MDM from Recovery"
 			if [ -d "/Volumes/${DATA_VOLUME}" ]; then
+				echo -e "${GRN}Renaming ${DATA_VOLUME}"
 				diskutil rename "${DATA_VOLUME}" "Data"
 			fi
 
 			# Create Temporary User
-			echo -e "${NC}Create a Temporary User"
-			read -p "Enter Temporary Fullname (Default is 'Apple'): " realName
-			realName="${realName:=Apple}"
-			read -p "Enter Temporary Username (Default is 'Apple'): " username
-			username="${username:=Apple}"
-			read -p "Enter Temporary Password (Default is '1234'): " passw
-			passw="${passw:=1234}"
-
-			# Create User
 			if [ ! -d "/Volumes/Data/Users/$username" ]; then
-				echo -e "${GREEN}Creating Temporary User"
+				echo -e "${GRN}Creating Temporary User"
+				read -p "Enter Temporary Fullname (Default is 'Apple'): " realName
+				realName="${realName:=Apple}"
+				read -p "Enter Temporary Username (Default is 'Apple'): " username
+				username="${username:=Apple}"
+				read -p "Enter Temporary Password (Default is '1234'): " passw
+				passw="${passw:=1234}"
 				dscl_path='/Volumes/Data/private/var/db/dslocal/nodes/Default'
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UserShell "/bin/zsh"
@@ -73,7 +71,7 @@ select opt in "${options[@]}"; do
 				dscl -f "$dscl_path" localhost -passwd "/Local/Default/Users/$username" "$passw"
 				dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership $username
 			else
-				echo -e "${GREEN}Temporary User already exist"
+				echo -e "${GRN}Temporary User already exist"
 			fi
 
 			# Block MDM domains
@@ -90,6 +88,7 @@ select opt in "${options[@]}"; do
 			fi
 
 			# Remove configuration profiles
+			echo -e "${GRN}Removing configuration profiles"
 			touch /Volumes/Data/private/var/db/.AppleSetupDone
 			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
 			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
@@ -102,12 +101,11 @@ select opt in "${options[@]}"; do
 			break
 			;;
 
-		"Reboot & Exit")
-			# Reboot & Exit
+		"Exit & Reboot")
+			# Exit & Reboot
 			echo "Rebooting..."
 			sleep 3
 			reboot
-			exit 0
 			break
 			;;
 
