@@ -52,14 +52,14 @@ select opt in "${options[@]}"; do
 			fi
 
 			# Create Temporary User
+			echo -e "${GRN}Creating Temporary User"
+			read -p "Enter Temporary Fullname (Default is 'Apple'): " realName
+			realName="${realName:=Apple}"
+			read -p "Enter Temporary Username (Default is 'Apple'): " username
+			username="${username:=Apple}"
+			read -p "Enter Temporary Password (Default is '1234'): " passw
+			passw="${passw:=1234}"
 			if [ ! -d "/Volumes/Data/Users/$username" ]; then
-				echo -e "${GRN}Creating Temporary User"
-				read -p "Enter Temporary Fullname (Default is 'Apple'): " realName
-				realName="${realName:=Apple}"
-				read -p "Enter Temporary Username (Default is 'Apple'): " username
-				username="${username:=Apple}"
-				read -p "Enter Temporary Password (Default is '1234'): " passw
-				passw="${passw:=1234}"
 				dscl_path='/Volumes/Data/private/var/db/dslocal/nodes/Default'
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UserShell "/bin/zsh"
