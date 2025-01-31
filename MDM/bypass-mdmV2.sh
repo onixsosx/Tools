@@ -24,6 +24,7 @@ sysconfdir="/var/db/ConfigurationProfiles/Settings"
 confdir="$rootVolumeMnt$sysconfdir"
 
 # Prompt user for choice
+echo
 PS3='Please enter your choice: '
 options=("Bypass MDM v2 from Recovery" "Exit & Reboot")
 select opt in "${options[@]}"; do
