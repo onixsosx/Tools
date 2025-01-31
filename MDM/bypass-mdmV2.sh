@@ -23,12 +23,6 @@ dataVolumeMnt="/Volumes/$dataVolume"
 sysconfdir="/var/db/ConfigurationProfiles/Settings"
 confdir="$rootVolumeMnt$sysconfdir"
 
-# display drive name
-echo
-echo "$rootVolumeMnt"
-echo "$dataVolumeMnt"
-echo
-
 # Prompt user for choice
 PS3='Please enter your choice: '
 options=("Bypass MDM v2 from Recovery" "Exit & Reboot")
