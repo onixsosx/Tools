@@ -13,18 +13,19 @@ CYAN='\033[1;36m'
 NC='\033[0m'
 
 # Get drive name
+default_drive_name="Macintosh HD"
 get_drive_name() {
 	while true; do
-		if [ -d "/Volumes/Macintosh HD" ]; then
-			echo "Drive Name: Macintosh HD"
+		if [ -d "/Volumes/$default_drive_name" ]; then
+			echo "Drive Name: $default_drive_name"
 			return
 		else
-			read -p "Default drive name 'Macintosh HD' not found. Please enter your drive name: " drive_name
+			read -p "Default drive name '$default_drive_name' not found. Enter your drive name: " drive_name
 			if [ -d "/Volumes/${drive_name}" ]; then
 				echo "$drive_name"
 				return
 			else
-				echo -e "${RED}Error: The drive name '${drive_name}' was not found. Please try again.${NC}" >&2
+				echo -e "${RED}Error: The drive name '${drive_name}' was not found. Try again.${NC}" >&2
 			fi
 		fi
 	done

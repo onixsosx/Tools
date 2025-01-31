@@ -13,7 +13,8 @@ CYAN='\033[1;36m'
 NC='\033[0m'
 
 # Display header
-echo -e "${CYAN}Bypass MDM v2 By iPC${NC}\n"
+echo -e "${CYAN}Bypass MDM v2 By iPC${NC}"
+echo
 
 # Get drive name
 dataVolume=$(ls -1 /Volumes | grep ' - Data$')
@@ -23,10 +24,14 @@ dataVolumeMnt="/Volumes/$dataVolume"
 sysconfdir="/var/db/ConfigurationProfiles/Settings"
 confdir="$rootVolumeMnt$sysconfdir"
 
+# display drive name
+echo "$rootVolumeMnt"
+echo "$dataVolumeMnt"
+echo
+
 # Prompt user for choice
 PS3='Please enter your choice: '
 options=("Bypass MDM v2 from Recovery" "Exit & Reboot")
-echo
 select opt in "${options[@]}"; do
 	case $opt in
 		"Bypass MDM v2 from Recovery")
