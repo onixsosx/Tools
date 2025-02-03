@@ -39,6 +39,11 @@ echo ""
 DRIVE_NAME=$(get_drive_name)
 DATA_VOLUME="${DRIVE_NAME} - Data"
 
+# display drive name
+echo "$DRIVE_NAME"
+echo "$DATA_VOLUME"
+echo
+
 # Prompt user for choice
 PS3='Please enter your choice: '
 options=("Bypass MDM from Recovery" "Exit & Reboot")
@@ -47,10 +52,11 @@ select opt in "${options[@]}"; do
 		"Bypass MDM from Recovery")
 			# Bypass MDM from Recovery
 			echo -e "${YEL}Bypass MDM from Recovery"
-			if [ -d "/Volumes/${DATA_VOLUME}" ]; then
-				echo -e "${GRN}Renaming ${DATA_VOLUME}"
-				diskutil rename "${DATA_VOLUME}" "Data"
-			fi
+			#if [ -d "/Volumes/${DATA_VOLUME}" ]; then
+			#	echo -e "${GRN}Renaming ${DATA_VOLUME}"
+			#	diskutil rename "${DATA_VOLUME}" "Data"
+			#	DATA_VOLUME="Data"
+			#fi
 
 			# Create Temporary User
 			echo -e "${GRN}Creating Temporary User"
@@ -60,14 +66,14 @@ select opt in "${options[@]}"; do
 			username="${username:=Apple}"
 			read -p "Enter Temporary Password (Default is '1234'): " passw
 			passw="${passw:=1234}"
-			if [ ! -d "/Volumes/Data/Users/$username" ]; then
-				dscl_path='/Volumes/Data/private/var/db/dslocal/nodes/Default'
+			if [ ! -d "/Volumes/${DATA_VOLUME}/Users/$username" ]; then
+				dscl_path='/Volumes/${DATA_VOLUME}/private/var/db/dslocal/nodes/Default'
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UserShell "/bin/zsh"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" RealName "$realName"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UniqueID "501"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" PrimaryGroupID "20"
-				mkdir -p "/Volumes/Data/Users/$username"
+				mkdir -p "/Volumes/${DATA_VOLUME}/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" NFSHomeDirectory "/Users/$username"
 				dscl -f "$dscl_path" localhost -passwd "/Local/Default/Users/$username" "$passw"
 				dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership $username
@@ -76,7 +82,7 @@ select opt in "${options[@]}"; do
 			fi
 
 			# Block MDM domains
-			if [ ! `grep 'acmdm.apple.com' /Volumes/Macintosh\ HD/etc/hosts` ]; then
+			if [ ! `grep 'acmdm.apple.com' "/Volumes/${DRIVE_NAME}/etc/hosts"` ]; then
 				echo -e "${GRN}Blocking MDM & Profile Domains"
 				echo "0.0.0.0 deviceenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
 				echo "0.0.0.0 mdmenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
@@ -90,7 +96,7 @@ select opt in "${options[@]}"; do
 
 			# Remove configuration profiles
 			echo -e "${GRN}Removing configuration profiles"
-			touch /Volumes/Data/private/var/db/.AppleSetupDone
+			touch "/Volumes/${DATA_VOLUME}/private/var/db/.AppleSetupDone"
 			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
 			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
 			touch "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled"
