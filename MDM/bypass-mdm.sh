@@ -15,7 +15,7 @@ NC='\033[0m'
 # Display header
 echo -e "${CYAN}Bypass MDM By iPC${NC}"
 echo
-if [ ! -d /Users ]; then
+if [ -d /Users ]; then
 	echo "FAIL: This can only be run in Recovery Mode"
 	echo
 	exit 1
