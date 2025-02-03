@@ -15,6 +15,11 @@ NC='\033[0m'
 # Display header
 echo -e "${CYAN}Bypass MDM v2 By iPC${NC}"
 echo
+if [ ! -d /Users ]; then
+	echo "FAIL: This can only be run in Recovery Mode"
+	echo
+	exit 1
+fi
 
 # Get drive name
 dataVolume=$(ls -1 /Volumes | grep ' - Data$')
@@ -48,9 +53,9 @@ select opt in "${options[@]}"; do
 			passw="${passw:=1234}"
 			if [ ! -d "${dataVolumeMnt}/Users/$username" ]; then
 				dscl_path="${dataVolumeMnt}/private/var/db/dslocal/nodes/Default"
-				user_path=/Local/Default/Users
-				group_path=/Local/Default/Groups
-				uid=501
+				user_path="/Local/Default/Users"
+				group_path="/Local/Default/Groups"
+				uid="501"
 				while dscl -f "$dscl_path" localhost -list "$user_path" UniqueID | grep "\<${uid}$"; do let uid++; done
 				dscl -f "$dscl_path" localhost -create "$user_path/$username"
 				dscl -f "$dscl_path" localhost -create "$user_path/$username" UserShell "/bin/zsh"

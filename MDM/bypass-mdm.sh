@@ -12,6 +12,15 @@ PUR='\033[1;35m'
 CYAN='\033[1;36m'
 NC='\033[0m'
 
+# Display header
+echo -e "${CYAN}Bypass MDM By iPC${NC}"
+echo
+if [ ! -d /Users ]; then
+	echo "FAIL: This can only be run in Recovery Mode"
+	echo
+	exit 1
+fi
+
 # Get drive name
 default_drive_name="Macintosh HD"
 get_drive_name() {
@@ -30,10 +39,6 @@ get_drive_name() {
 		fi
 	done
 }
-
-# Display header
-echo -e "${CYAN}Bypass MDM By iPC${NC}"
-echo ""
 
 # Get drive name
 DRIVE_NAME=$(get_drive_name)
@@ -67,7 +72,7 @@ select opt in "${options[@]}"; do
 			read -p "Enter Temporary Password (Default is '1234'): " passw
 			passw="${passw:=1234}"
 			if [ ! -d "/Volumes/${DATA_VOLUME}/Users/$username" ]; then
-				dscl_path='/Volumes/${DATA_VOLUME}/private/var/db/dslocal/nodes/Default'
+				dscl_path="/Volumes/${DATA_VOLUME}/private/var/db/dslocal/nodes/Default"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UserShell "/bin/zsh"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" RealName "$realName"
