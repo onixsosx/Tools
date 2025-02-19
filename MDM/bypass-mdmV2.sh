@@ -1,6 +1,5 @@
 #!/bin/bash
 
-clear
 export LC_ALL=C
 
 # Define color codes
@@ -15,11 +14,6 @@ NC='\033[0m'
 # Display header
 echo -e "${CYAN}Bypass MDM v2 By iPC${NC}"
 echo
-if [ -d /Users ]; then
-	echo "FAIL: This can only be run in Recovery Mode"
-	echo
-	exit 1
-fi
 
 # Get drive name
 dataVolume=$(ls -1 /Volumes | grep ' - Data$')
