@@ -45,7 +45,7 @@ echo
 
 # Prompt user for choice
 PS3='Please enter your choice: '
-options=("Bypass MDM from Recovery" "Exit & Reboot")
+options=("Bypass MDM from Recovery" "Quit")
 select opt in "${options[@]}"; do
 	case $opt in
 		"Bypass MDM from Recovery")
@@ -103,15 +103,15 @@ select opt in "${options[@]}"; do
 
 			# Result message
 			echo -e "${GRN}MDM enrollment has been bypassed!${NC}"
-			echo -e "${NC}Exit terminal and reboot your Mac.${NC}"
+			echo -e "${NC}Quit terminal and reboot your Mac.${NC}"
 			break
 			;;
 
-		"Exit & Reboot")
-			# Exit & Reboot
-			echo "Rebooting..."
+		"Quit")
+			# Quit
+			echo "Quitting..."
 			sleep 3
-			reboot
+			echo "Done"
 			break
 			;;
 
