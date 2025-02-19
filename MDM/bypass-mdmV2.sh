@@ -45,7 +45,7 @@ select opt in "${options[@]}"; do
 			username="${username:=Apple}"
 			read -p "Enter Temporary Password (Default is '1234'): " passw
 			passw="${passw:=1234}"
-			if [ ! -d "${dataVolumeMnt}/Users/$username" ]; then
+			if [[ ! -d "${dataVolumeMnt}/Users/$username" ]]; then
 				dscl_path="${dataVolumeMnt}/private/var/db/dslocal/nodes/Default"
 				user_path="/Local/Default/Users"
 				group_path="/Local/Default/Groups"
@@ -66,7 +66,7 @@ select opt in "${options[@]}"; do
 
 			# Block MDM domains
 			hostsfile="$rootVolumeMnt/etc/hosts"
-			if [ ! `grep 'acmdm.apple.com' "$hostsfile"` ]; then
+			if [[ ! `grep 'acmdm.apple.com' "$hostsfile"` ]]; then
 				echo -e "${GRN}Blocking MDM & Profile Domains"
 				echo "0.0.0.0 deviceenrollment.apple.com" >> "$hostsfile"
 				echo "0.0.0.0 mdmenrollment.apple.com" >> "$hostsfile"
@@ -80,9 +80,10 @@ select opt in "${options[@]}"; do
 
 			# Remove configuration profiles
 			echo -e "${GRN}Removing configuration profiles"
+			rm -f "${dataVolumeMnt}/private/var/db/.AppleSetupDone"
+			rm -f "$confdir/.cloudConfigHasActivationRecord"
+			rm -f "$confdir/.cloudConfigRecordFound"
 			touch "${dataVolumeMnt}/private/var/db/.AppleSetupDone"
-			rm -Rf "$confdir/.cloudConfigHasActivationRecord"
-			rm -Rf "$confdir/.cloudConfigRecordFound"
 			touch "$confdir/.cloudConfigProfileInstalled"
 			touch "$confdir/.cloudConfigRecordNotFound"
 

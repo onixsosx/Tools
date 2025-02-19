@@ -65,7 +65,7 @@ select opt in "${options[@]}"; do
 			username="${username:=Apple}"
 			read -p "Enter Temporary Password (Default is '1234'): " passw
 			passw="${passw:=1234}"
-			if [ ! -d "/Volumes/${DATA_VOLUME}/Users/$username" ]; then
+			if [[ ! -d "/Volumes/${DATA_VOLUME}/Users/$username" ]]; then
 				dscl_path="/Volumes/${DATA_VOLUME}/private/var/db/dslocal/nodes/Default"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username"
 				dscl -f "$dscl_path" localhost -create "/Local/Default/Users/$username" UserShell "/bin/zsh"
@@ -81,7 +81,7 @@ select opt in "${options[@]}"; do
 			fi
 
 			# Block MDM domains
-			if [ ! `grep 'acmdm.apple.com' "/Volumes/${DRIVE_NAME}/etc/hosts"` ]; then
+			if [[ ! `grep 'acmdm.apple.com' "/Volumes/${DRIVE_NAME}/etc/hosts"` ]]; then
 				echo -e "${GRN}Blocking MDM & Profile Domains"
 				echo "0.0.0.0 deviceenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
 				echo "0.0.0.0 mdmenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
@@ -95,9 +95,10 @@ select opt in "${options[@]}"; do
 
 			# Remove configuration profiles
 			echo -e "${GRN}Removing configuration profiles"
+			rm -f "/Volumes/${DATA_VOLUME}/private/var/db/.AppleSetupDone"
+			rm -f "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
+			rm -f "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
 			touch "/Volumes/${DATA_VOLUME}/private/var/db/.AppleSetupDone"
-			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
-			rm -Rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
 			touch "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled"
 			touch "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound"
 
