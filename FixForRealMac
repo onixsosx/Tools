@@ -93,7 +93,7 @@ fi
 #Done Disabling Gatekeeper
 
 #Hide OTHER account from the Login Window
-defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
+#defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
 #Done Hide OTHER account from the Login Window
 
 echo "Cleaning Up [Approximately 1-2mins]"
@@ -103,21 +103,12 @@ rm -Rf /private/var/vm/sleepimage &>/dev/null
 rm -Rf /.fseventsd &>/dev/null
 rm -Rf /.Spotlight-V100 &>/dev/null
 rm -Rf /.TemporaryItems &>/dev/null
-rm -Rf /Library/Logs/DiagnosticReports/* &>/dev/null
-rm -Rf "$HOME"/Library/Logs/CoreSimulator/* &>/dev/null
-rm -Rf "$HOME"/Library/Developer/Xcode/DerivedData/* &>/dev/null
-rm -Rf "$HOME"/Library/Developer/Xcode/Archives/* &>/dev/null
+rm -Rf /Library/Logs/* &>/dev/null
+rm -Rf "$HOME"/Library/Logs/* &>/dev/null
 rm -f "$HOME"/.zsh_history &>/dev/null
 rm -Rf "$HOME"/.zsh_sessions &>/dev/null
-rm -Rf /private/var/log/asl/*.asl &>/dev/null
-rm -Rf "$HOME"/Library/Caches/com.apple.Safari/* &>/dev/null
-rm -f "$HOME"/Library/Safari/History* &>/dev/null
-rm -f "$HOME"/Library/Safari/LastSession* &>/dev/null
-rm -f "$HOME"/Library/Safari/RecentlyClosedTabs* &>/dev/null
-rm -Rf "$HOME"/Library/Caches/Google/Chrome/* &>/dev/null
-rm -f "$HOME"/Library/Application\ Support/Google/Chrome/Default/History* &>/dev/null
-rm -Rf "$HOME"/Library/Caches/Firefox/Profiles/* &>/dev/null
-rm -f "$HOME"/Library/Application\ Support/Firefox/Profiles/*/places* &>/dev/null
+rm -Rf /private/var/log/* &>/dev/null
+rm -Rf /private/var/logs/* &>/dev/null
 dscacheutil -flushcache &>/dev/null
 killall -HUP mDNSResponder &>/dev/null
 rm -Rf /Volumes/*/.Trashes/* &>/dev/null
