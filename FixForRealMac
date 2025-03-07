@@ -9,9 +9,6 @@ if [ -d /usr/local/bin/Bootloader ]; then # if Bootloader folder exist
 fi
 #Done Check if it's Apple
 
-if [[ ! `echo $PATH|grep "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"` ]]; then # if Not Found
-	export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-fi
 export LC_ALL=C
 MY_DIR=$(dirname "$0")
 KERNEL_VERSION=$(uname -r)
