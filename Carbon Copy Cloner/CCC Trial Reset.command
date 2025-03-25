@@ -22,8 +22,9 @@ defaults delete com.bombich.ccc TrialStartDateV4 &>/dev/null
 defaults delete com.bombich.ccc TrialStartDateV5 &>/dev/null
 defaults delete com.bombich.ccc TrialStartDateV6 &>/dev/null
 defaults delete com.bombich.ccc paid &>/dev/null
-rm -rf ~/Library/Application\ Support/com.bombich.ccc
+rm -Rf "$HOME"/Library/Application\ Support/com.bombich.ccc
 rm -f /Library/PrivilegedHelperTools/com.bombich.ccchelper
+rm -Rf /Library/Application\ Support/com.bombich.ccc
 
 echo Done!
 echo
