@@ -4,7 +4,7 @@ clear
 
 #Check if it's Apple
 if [[ `ioreg -lw0|grep -i 'org.netkas.fakesmc'` ]]; then
-	echo "FAIL: This is not an Apple."
+	echo "ERROR: This is not an Apple."
 	echo
 	exit 1
 fi
