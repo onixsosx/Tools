@@ -87,19 +87,23 @@ if [ "$KERNEL_MAJOR" -eq 19 ]; then # Catalina
 fi
 #Done Make it R/W
 
-echo "Disabling Gatekeeper"
 #Disabling Gatekeeper
-if [ "$KERNEL_MAJOR" -le 19 ]; then # Catalina & below
-	spctl --master-disable
-elif [ "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # BigSur-Sonoma
-	spctl --global-disable
-fi
-if [ "$KERNEL_MAJOR" -eq 14 -o "$KERNEL_MAJOR" -eq 15 -o "$KERNEL_MAJOR" -eq 16 -o "$KERNEL_MAJOR" -eq 17 -o "$KERNEL_MAJOR" -eq 18 -o "$KERNEL_MAJOR" -eq 19 -o "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # Yose-Sonoma
-	defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
-fi
-if [ "$KERNEL_MAJOR" -ge 24 ]; then # Sequoia & above
-	defaults write /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist enabled -string no
-	chmod 644 /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist
+status=$(csrutil status | grep "System Integrity Protection status:" | sed -n 's/.*status: *//p')
+	if [[ "$status" == "disabled." ]] ; then
+		echo "Disabling Gatekeeper"
+		if [ "$KERNEL_MAJOR" -le 19 ]; then # Catalina & below
+			spctl --master-disable
+		elif [ "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # BigSur-Sonoma
+			spctl --global-disable
+		fi
+		if [ "$KERNEL_MAJOR" -eq 14 -o "$KERNEL_MAJOR" -eq 15 -o "$KERNEL_MAJOR" -eq 16 -o "$KERNEL_MAJOR" -eq 17 -o "$KERNEL_MAJOR" -eq 18 -o "$KERNEL_MAJOR" -eq 19 -o "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # Yose-Sonoma
+			defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
+		fi
+		if [ "$KERNEL_MAJOR" -ge 24 ]; then # Sequoia & above
+			defaults write /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist enabled -string no
+			chmod 644 /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist
+		fi
+	fi
 fi
 #Done Disabling Gatekeeper
 
@@ -112,7 +116,7 @@ else
 fi
 
 #Hide OTHER account from the Login Window
-#defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
+defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
 #Done Hide OTHER account from the Login Window
 
 echo "Cleaning Up [Approximately 1-2mins]"
