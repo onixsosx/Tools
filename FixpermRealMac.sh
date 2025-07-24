@@ -115,7 +115,33 @@ else
 	pmset -a hibernatemode 3
 fi
 
+#Delaying Microsoft Office Auto Update
+if [ -e /Library/LaunchAgents/com.microsoft.update.agent.plist ]; then
+	if [[ ! `grep -i '86400' /Library/LaunchAgents/com.microsoft.update.agent.plist` ]]; then
+		echo "Delaying Microsoft Offce Update"
+		plutil -replace StartInterval -integer 86400 /Library/LaunchAgents/com.microsoft.update.agent.plist
+		chmod 644 /Library/LaunchAgents/com.microsoft.update.agent.plist
+		chown root:wheel /Library/LaunchAgents/com.microsoft.update.agent.plist
+	fi
+fi
+#Done Delaying Microsoft Office Auto Update
+
+#Disabling Adobe Genuine Software Service
+if [ -d /Library/Application\ Support/Adobe/AdobeGCClient ]; then
+	if [[ ! `stat -f %A /Library/Application\ Support/Adobe/AdobeGCClient` == '444' ]]; then # if Permissions not 444
+		echo "Disabling Adobe Genuine Software Service"
+		rm -Rf /Library/Application\ Support/Adobe/AdobeGCClient/* &>/dev/null
+		chmod -R 0444 /Library/Application\ Support/Adobe/AdobeGCClient
+		if [ -e /Library/LaunchDaemons/com.adobe.agsservice.plist ]; then
+			"$PlistBuddy" -c "Set :RunAtLoad false" /Library/LaunchDaemons/com.adobe.agsservice.plist
+			chmod 644 /Library/LaunchDaemons/com.adobe.agsservice.plist
+		fi
+	fi
+fi
+#Done Disabling Adobe Genuine Software Service
+
 #Hide OTHER account from the Login Window
+echo "Hidding OTHER account"
 defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED -bool false
 #Done Hide OTHER account from the Login Window
 
