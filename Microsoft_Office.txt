@@ -1,0 +1,20 @@
+Download Microsoft Office: O365ProPlusRetail
+https://officecdn.microsoft.com/db/492350f6-3a01-4f97-b9c0-c7c6ddf67d60/media/en-us/O365ProPlusRetail.img
+
+
+Download Microsoft Teams:
+https://statics.teams.cdn.office.net/evergreen-assets/DesktopClient/MSTeamsSetup.exe
+
+Download Activator: Ohook_Activation_AIO
+https://www.dropbox.com/scl/fi/bx85qztqmqmitig9o0dkf/Ohook_Activation_AIO.cmd?rlkey=sl8u616bs9c70pz202gs1otak&dl=0
+
+************************
+
+Instructions:
+1. Install O365ProPlusRetail.img by double clicking it to mount & install  
+2. Install Teams
+3. right click Ohook_Activation_AIO.cmd and choose "Run as Administrator" then select install
+
+
+
+
