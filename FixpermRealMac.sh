@@ -161,6 +161,7 @@ rm -f "$HOME"/.bash_history &>/dev/null
 rm -Rf "$HOME"/.bash_sessions &>/dev/null
 rm -f "$HOME"/.zsh_history &>/dev/null
 rm -Rf "$HOME"/.zsh_sessions &>/dev/null
+rm -Rf "$HOME"/Library/Application\ Support/CloudDocs &>/dev/null
 #Safari
 rm -Rf "$HOME"/Library/Caches/com.apple.Safari/* &>/dev/null
 rm -f "$HOME"/Library/Safari/History* &>/dev/null
