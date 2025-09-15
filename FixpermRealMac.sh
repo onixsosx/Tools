@@ -67,7 +67,7 @@ if [[ $(id -u) -ne 0 ]]; then # If not Root
 	if [ "$KERNEL_MAJOR" -le 20 ]; then # Bigsur & below (Disable Chrome Outdated Notification)
 		defaults write com.google.Chrome SuppressUnsupportedOSWarning -bool true
 	else
-		defaults delete com.google.Chrome SuppressUnsupportedOSWarning &>/dev/null
+		defaults delete com.google.Chrome SuppressUnsupportedOSWarning #&>/dev/null
 	fi
 fi
 #Done Enabling Tweaks
@@ -82,37 +82,38 @@ fi
 #Make it R/W
 if [ "$KERNEL_MAJOR" -eq 19 ]; then # Catalina
 	if [ ! -w / ]; then
-		mount -uw / &>/dev/null
+		mount -uw / #&>/dev/null
 	fi
 fi
 #Done Make it R/W
 
 #Disabling Gatekeeper
 status=$(csrutil status | grep "System Integrity Protection status:" | sed -n 's/.*status: *//p')
-	if [[ "$status" == "disabled." ]] ; then
-		echo "Disabling Gatekeeper"
-		if [ "$KERNEL_MAJOR" -le 19 ]; then # Catalina & below
-			spctl --master-disable
-		elif [ "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # BigSur-Sonoma
-			spctl --global-disable
-		fi
-		if [ "$KERNEL_MAJOR" -eq 14 -o "$KERNEL_MAJOR" -eq 15 -o "$KERNEL_MAJOR" -eq 16 -o "$KERNEL_MAJOR" -eq 17 -o "$KERNEL_MAJOR" -eq 18 -o "$KERNEL_MAJOR" -eq 19 -o "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # Yose-Sonoma
-			defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
-		fi
-		if [ "$KERNEL_MAJOR" -ge 24 ]; then # Sequoia & above
-			defaults write /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist enabled -string no
-			chmod 644 /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist
-		fi
+if [[ "$status" == "disabled." ]] ; then
+	echo "Disabling Gatekeeper"
+	if [ "$KERNEL_MAJOR" -le 19 ]; then # Catalina & below
+		spctl --master-disable
+	elif [ "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # BigSur-Sonoma
+		spctl --global-disable
+	fi
+	if [ "$KERNEL_MAJOR" -eq 14 -o "$KERNEL_MAJOR" -eq 15 -o "$KERNEL_MAJOR" -eq 16 -o "$KERNEL_MAJOR" -eq 17 -o "$KERNEL_MAJOR" -eq 18 -o "$KERNEL_MAJOR" -eq 19 -o "$KERNEL_MAJOR" -eq 20 -o "$KERNEL_MAJOR" -eq 21 -o "$KERNEL_MAJOR" -eq 22 -o "$KERNEL_MAJOR" -eq 23 ]; then # Yose-Sonoma
+		defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
+	fi
+	if [ "$KERNEL_MAJOR" -ge 24 ]; then # Sequoia & above
+		defaults write /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist enabled -string no
+		chmod 644 /var/db/SystemPolicyConfiguration/SystemPolicy-prefs.plist
 	fi
 fi
 #Done Disabling Gatekeeper
 
-if [[ `system_profiler SPNVMeDataType|grep -i "NVMExpress:" ` ]]; then # if MacBookAir 2015 is using NVME 
-	echo "Setting Hibernate mode to 25"
-	pmset -a hibernatemode 25
-else
-	echo "Restoring Hibernate mode to 3"
-	pmset -a hibernatemode 3
+if [[ `sysctl -n hw.model|grep -i "MacBookAir7,2" ` ]]; then # if MacBookAir 2015 is using NVME 
+	if [[ `system_profiler SPNVMeDataType|grep -i "NVMExpress:" ` ]]; then
+		echo "NVME Detected. Setting Hibernate mode to 25"
+		pmset -a hibernatemode 25
+	else
+		echo "Restoring Hibernate mode to 3"
+		pmset -a hibernatemode 3
+	fi
 fi
 
 #Delaying Microsoft Office Auto Update
@@ -130,7 +131,7 @@ fi
 if [ -d /Library/Application\ Support/Adobe/AdobeGCClient ]; then
 	if [[ ! `stat -f %A /Library/Application\ Support/Adobe/AdobeGCClient` == '444' ]]; then # if Permissions not 444
 		echo "Disabling Adobe Genuine Software Service"
-		rm -Rf /Library/Application\ Support/Adobe/AdobeGCClient/* &>/dev/null
+		rm -Rf /Library/Application\ Support/Adobe/AdobeGCClient/* #&>/dev/null
 		chmod -R 0444 /Library/Application\ Support/Adobe/AdobeGCClient
 		if [ -e /Library/LaunchDaemons/com.adobe.agsservice.plist ]; then
 			"$PlistBuddy" -c "Set :RunAtLoad false" /Library/LaunchDaemons/com.adobe.agsservice.plist
@@ -146,44 +147,43 @@ defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED
 #Done Hide OTHER account from the Login Window
 
 echo "Cleaning Up [Approximately 1-2mins]"
-find "$HOME" -name "~$"* -depth -exec rm -f {} \;
-dot_clean "$HOME"
-rm -Rf /private/var/vm/sleepimage &>/dev/null
-rm -Rf /.fseventsd &>/dev/null
-rm -Rf /.Spotlight-V100 &>/dev/null
-rm -Rf /.TemporaryItems &>/dev/null
-rm -Rf /private/var/tmp/* &>/dev/null
-rm -Rf /private/var/log/* &>/dev/null
-rm -Rf /private/var/logs/* &>/dev/null
-rm -Rf /Library/Logs/* &>/dev/null
-rm -Rf "$HOME"/Library/Logs/* &>/dev/null
-rm -f "$HOME"/.bash_history &>/dev/null
-rm -Rf "$HOME"/.bash_sessions &>/dev/null
-rm -f "$HOME"/.zsh_history &>/dev/null
-rm -Rf "$HOME"/.zsh_sessions &>/dev/null
-rm -Rf "$HOME"/Library/Application\ Support/CloudDocs &>/dev/null
+#find "$HOME" -name "~$"* -depth -exec rm -f {} \;
+#dot_clean "$HOME"
+rm -Rf /.fseventsd #&>/dev/null
+rm -Rf /.Spotlight-V100 #&>/dev/null
+rm -Rf /.TemporaryItems #&>/dev/null
+rm -Rf /private/var/tmp/* #&>/dev/null
+rm -Rf /private/var/log/* #&>/dev/null
+rm -Rf /private/var/logs/* #&>/dev/null
+rm -Rf /Library/Logs/* #&>/dev/null
+rm -Rf "$HOME"/Library/Logs/* #&>/dev/null
+rm -f "$HOME"/.bash_history #&>/dev/null
+rm -Rf "$HOME"/.bash_sessions #&>/dev/null
+rm -f "$HOME"/.zsh_history #&>/dev/null
+rm -Rf "$HOME"/.zsh_sessions #&>/dev/null
+#rm -Rf "$HOME"/Library/Application\ Support/CloudDocs #&>/dev/null
 #Safari
-rm -Rf "$HOME"/Library/Caches/com.apple.Safari/* &>/dev/null
-rm -f "$HOME"/Library/Safari/History* &>/dev/null
-rm -f "$HOME"/Library/Safari/LastSession* &>/dev/null
-rm -f "$HOME"/Library/Safari/RecentlyClosedTabs* &>/dev/null
+rm -Rf "$HOME"/Library/Caches/com.apple.Safari/* #&>/dev/null
+rm -f "$HOME"/Library/Safari/History* #&>/dev/null
+rm -f "$HOME"/Library/Safari/LastSession* #&>/dev/null
+rm -f "$HOME"/Library/Safari/RecentlyClosedTabs* #&>/dev/null
 #Done Safari
 #Chrome
-rm -Rf "$HOME"/Library/Caches/Google/Chrome/* &>/dev/null
-rm -f "$HOME"/Library/Application\ Support/Google/Chrome/Default/History* &>/dev/null
+rm -Rf "$HOME"/Library/Caches/Google/Chrome/* #&>/dev/null
+rm -f "$HOME"/Library/Application\ Support/Google/Chrome/Default/History* #&>/dev/null
 #Done Chrome
 #Firefox
-rm -Rf "$HOME"/Library/Caches/Firefox/Profiles/* &>/dev/null
-rm -f "$HOME"/Library/Application\ Support/Firefox/Profiles/*/places* &>/dev/null
+rm -Rf "$HOME"/Library/Caches/Firefox/Profiles/* #&>/dev/null
+rm -f "$HOME"/Library/Application\ Support/Firefox/Profiles/*/places* #&>/dev/null
 #Done Firefox
-dscacheutil -flushcache &>/dev/null
-killall -HUP mDNSResponder &>/dev/null
-rm -Rf /Volumes/*/.Trashes/* &>/dev/null
+dscacheutil -flushcache #&>/dev/null
+killall -HUP mDNSResponder #&>/dev/null
+rm -Rf /Volumes/*/.Trashes/* #&>/dev/null
 if [ -d /.Trashes ]; then
-	rm -Rf /.Trashes/* &>/dev/null
+	rm -Rf /.Trashes/* #&>/dev/null
 fi
 if [ -d "$HOME"/.Trash ]; then
-	rm -Rf "$HOME"/.Trash/* &>/dev/null
+	rm -Rf "$HOME"/.Trash/* #&>/dev/null
 fi
 timeout () {
 	tput sc
