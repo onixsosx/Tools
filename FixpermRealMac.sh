@@ -147,8 +147,18 @@ defaults write /Library/Preferences/com.apple.loginwindow SHOWOTHERUSERS_MANAGED
 #Done Hide OTHER account from the Login Window
 
 echo "Cleaning Up [Approximately 1-2mins]"
-#find "$HOME" -name "~$"* -depth -exec rm -f {} \;
-#dot_clean "$HOME"
+find "$HOME/Desktop" -name "~$"* -depth -exec rm -f {} \;
+find "$HOME/Documents" -name "~$"* -depth -exec rm -f {} \;
+find "$HOME/Downloads" -name "~$"* -depth -exec rm -f {} \;
+find "$HOME/Movies" -name "~$"* -depth -exec rm -f {} \;
+find "$HOME/Music" -name "~$"* -depth -exec rm -f {} \;
+find "$HOME/Pictures" -name "~$"* -depth -exec rm -f {} \;
+dot_clean "$HOME/Desktop"
+dot_clean "$HOME/Documents"
+dot_clean "$HOME/Downloads"
+dot_clean "$HOME/Movies"
+dot_clean "$HOME/Music"
+dot_clean "$HOME/Pictures"
 rm -Rf /.fseventsd #&>/dev/null
 rm -Rf /.Spotlight-V100 #&>/dev/null
 rm -Rf /.TemporaryItems #&>/dev/null
